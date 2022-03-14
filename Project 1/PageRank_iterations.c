@@ -1,4 +1,4 @@
-
+#include <math.h>
 
 void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
     int state = 1;
@@ -6,13 +6,20 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
     int k = 1;
     
     double *x_k_1 = scores;
-    double *x_k = (double*)malloc(N*sizeof(double));
-    double max_err = 0;
-    double W_k_1;
-    double d_term;
+    double *x_k = malloc(N*sizeof(double));
+    double *Ax_k_1 = malloc(N * sizeof(double));
+    double max_err; 
+    double err, W_k_1, d_term;
 
     while (state == 1){
-        
+       max_err=0;
+       err = 0;
+
+       for (size_t i = 0; i < N+1; i++)
+       {
+           Ax_k_1[i] = 0 ;
+       }
+       
 
         /* Calculate W_k_1 */
 
@@ -23,7 +30,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
 
         /* Sparse matrix multiplication */
 
-        double *Ax_k_1 = (double*)malloc(N*sizeof(double));
+        
         for (size_t i = 0; i < N; i++)
         {
             for (size_t j = row_ptr[i]; j < row_ptr[i+1]; j++)
@@ -38,28 +45,51 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
 
         for (size_t i = 0; i < N; i++)
         {
-            x_k[i] = d_term + d*Ax_k_1[i];
+            x_k[i] = d_term + d * Ax_k_1[i];
         }
 
 
         /* Check stopping criterion */
+        max_err += fabs(x_k[0] - x_k_1[0]);
+        printf("\n");
+        printf("%d\n", k);
+        printf("max_err = %f, epsilon = %f\n", max_err, epsilon);
+        for (size_t i = 1; i < N; i++)
+        {
+            err += fabs(x_k[i]-x_k_1[i]);
+            
+            if (err > max_err){
+                max_err = err;
+            }
+        }
 
         
-        for (size_t i = 0; i < N; i++)
-        {
-            
+        printf("max_err = %f, epsilon = %f\n", max_err, epsilon);
+
+        if (max_err < epsilon){
+            break;
         }
         
 
         /* Updating vectors */
         
-        memcpy(x_k, x_k_1, N*sizeof(double));
+        memcpy(x_k_1, x_k, N*sizeof(double));
+
+        
+
+
+        if (k == 10){
+            break;
+        }
 
         k += 1;
-        
+        }
 
-        
-    }
+    memcpy(scores, x_k, N*sizeof(double));
 
-    
+    for (int i = 0; i < N; ++i)
+        printf("x_k: %f and score: %f\n", x_k[i], scores[i]);
+
+    free(x_k_1);
+    free(x_k);
 }   

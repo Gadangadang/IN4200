@@ -28,9 +28,9 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     int from_arr = 0;
     int to_arr = 0;
 
-    int *row_count = (int*)malloc(*N*sizeof(int));
-    int *L_count = (int*)malloc(*N*sizeof(int));
-    *row_ptr = (int*)malloc(*N*sizeof(int)+1);
+    int *row_count = malloc(*N*sizeof(int));
+    int *L_count = malloc(*N*sizeof(int));
+    *row_ptr = malloc(*N*sizeof(int)+1);
     (*row_ptr)[0] = 0;
     
     int i = 0;
@@ -73,9 +73,9 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     getline(&line, &len, fp);
 
 
-    *col_idx = (int*)malloc(edges*sizeof(int));
-    int *count = (int*)malloc(*N*sizeof(int));
-    *val = (double*)malloc(edges*sizeof(double));
+    *col_idx = malloc(edges*sizeof(int));
+    int *count = malloc(*N*sizeof(int));
+    *val = malloc(edges*sizeof(double));
     for (int i = 0; i < edges; i++) (*col_idx)[i] = *N;
     
     from_arr = 0;
@@ -115,7 +115,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
         printf("%d, %f \n", (*col_idx)[i], (*val)[i]);
     }
     
-    
+    free(count); free(L_count); free(row_count);
 
     fclose(fp);
 
