@@ -1,7 +1,7 @@
 all: compile execute 
 
 compile:
-	gcc-11 -Wall -fopenmp -o main.x main.c 
+	gcc -Wall -fsanitize=address -fopenmp -o main.x main.c -g 
 
 execute:
-	./main.x "testweb.txt" 0.85 0.01 100
+	./main.x "testweb.txt" 0.85 0.01 8

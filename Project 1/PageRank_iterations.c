@@ -3,9 +3,12 @@
 void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
     int state = 1;
 
-    int k = 1;
+    int k = 0;
     
-    double *x_k_1 = scores;
+    double *x_k_1 = malloc(N*sizeof(double));
+
+    memcpy(x_k_1, scores, N*sizeof(double));
+    
     double *x_k = malloc(N*sizeof(double));
     double *Ax_k_1 = malloc(N * sizeof(double));
     double max_err; 
@@ -15,7 +18,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
        max_err=0;
        err = 0;
 
-       for (size_t i = 0; i < N+1; i++)
+       for (size_t i = 0; i < N; i++)
        {
            Ax_k_1[i] = 0 ;
        }
@@ -72,9 +75,11 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
         
 
         /* Updating vectors */
-        
-        memcpy(x_k_1, x_k, N*sizeof(double));
 
+        for (size_t i = 0; i < N; i++)
+        {
+            x_k_1[i] = x_k[i];
+        }
         
 
 
@@ -85,11 +90,16 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
         k += 1;
         }
 
+    
     memcpy(scores, x_k, N*sizeof(double));
+    
 
     for (int i = 0; i < N; ++i)
         printf("x_k: %f and score: %f\n", x_k[i], scores[i]);
 
     free(x_k_1);
     free(x_k);
+    free(Ax_k_1);
+
+    
 }   

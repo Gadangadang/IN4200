@@ -4,9 +4,13 @@
 #include <string.h>
 #include "read_graph_from_file.c"
 #include "PageRank_iterations.c"
-
+#include "top_n_webpages.c"
 
 int main(int argc, char **argv){
+    /*
+    -g as flag and gdb "name of compiled file" to debug line by line
+    */
+
     char *filename;
     filename = argv[1];
 
@@ -22,7 +26,8 @@ int main(int argc, char **argv){
 
     
     
-    double *scores = (double*)malloc(N*sizeof(double));
+    
+    double *scores = malloc(N*sizeof(double));
     for (int i = 0; i < N ; ++i) {
         scores[i] = 1./(N);
         
@@ -32,4 +37,11 @@ int main(int argc, char **argv){
     PageRank_iterations(N, row_ptr, col_idx, val, d, epsilon, scores);
 
     
+
+    top_n_webpages(N, scores, n);
+
+    free(row_ptr); free(col_idx); free(val); free(scores);
+
+    printf("Hello\n");
+    return 0;
 }

@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <omp.h>
+#include <string.h>
 
 void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, double **val){
 
@@ -30,7 +33,12 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
 
     int *row_count = malloc(*N*sizeof(int));
     int *L_count = malloc(*N*sizeof(int));
-    *row_ptr = malloc(*N*sizeof(int)+1);
+
+    memset(row_count, 0, *N*sizeof(int));
+    memset(L_count, 0, *N*sizeof(int));
+    
+
+    *row_ptr = malloc(((*N)+1)*sizeof(int));
     (*row_ptr)[0] = 0;
     
     int i = 0;
@@ -46,43 +54,51 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     {
         
         (*row_ptr)[i+1] = (*row_ptr)[i] + row_count[i] ;
-        printf("%d", row_count[i]);
+        printf("%d, ", row_count[i]);
         
     }
     printf("\n");
+
     for (size_t i = 0; i < *N+1; i++)
     {
         printf("%d", (*row_ptr)[i]);
     }
     
-    if (line)
-        free(line);
+    
 
-    fclose(fp);
+    rewind(fp);
 
     printf("\n");
     printf("\n");
 
-    fp = fopen(filename, "r");
+    
 
-    for (int i = 0; i < 1; ++i)
-        getline(&line, &len, fp); /* Skip the first 2 lines in file */
-
+    
+    getline(&line, &len, fp); /* Skip the first 2 lines in file */
+    getline(&line, &len, fp);
     
     getline(&line, &len, fp);
     getline(&line, &len, fp);
-
+    
 
     *col_idx = malloc(edges*sizeof(int));
     int *count = malloc(*N*sizeof(int));
     *val = malloc(edges*sizeof(double));
-    for (int i = 0; i < edges; i++) (*col_idx)[i] = *N;
+    
+
+    memset(count, 0, *N*sizeof(int));
+    
+    memset(*val, 0, edges*sizeof(double));
+    
+    memset(*col_idx, *N, edges*sizeof(int));
     
     from_arr = 0;
     to_arr = 0;
  
- 
-    while ((read = getline(&line, &len, fp)) != -1) {
+    
+
+    for (size_t i = 0; i < edges; i++)
+     {
         fscanf(fp, "%d %d", &from_arr, &to_arr);
         
         
@@ -115,8 +131,9 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
         printf("%d, %f \n", (*col_idx)[i], (*val)[i]);
     }
     
-    free(count); free(L_count); free(row_count);
+    free(count); free(L_count); free(row_count); free(line);
 
     fclose(fp);
+    
 
 }
