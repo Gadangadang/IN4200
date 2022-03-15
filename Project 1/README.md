@@ -1,5 +1,5 @@
 # Mandatory project 1
-To run the code, simply type "make all" in the terminal, and the code will run. <\br
+To run the code, simply type "make all" in the terminal, and the code will run. <br>
 Beneath is what is shown in the make file. 
 ```
 all: compile execute 
