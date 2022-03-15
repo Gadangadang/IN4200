@@ -23,8 +23,8 @@
     /* Print top n webpages */
 
     printf("------------------------------------------\n");
-    printf("------------ Top %d webpages ------------\n", n);
-    printf("------------------------------------------\n");
+    printf("             Top %d webpages              \n", n);
+  
     
     for (size_t i = 0; i <n; i++)
     {   
@@ -87,4 +87,5 @@ int sort(double *a, int *b, int N){
             
         }
     }
+    return 0;
 }
