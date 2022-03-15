@@ -4,4 +4,4 @@ compile:
 	gcc -Wall -fsanitize=address -fopenmp -o main.x main.c -g 
 
 execute:
-	./main.x "testweb.txt" 0.85 0.01 8
+	./main.x "testweb2.txt" 1 1e-6 10

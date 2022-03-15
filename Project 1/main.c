@@ -6,6 +6,9 @@
 #include "PageRank_iterations.c"
 #include "top_n_webpages.c"
 
+
+
+
 int main(int argc, char **argv){
     /*
     -g as flag and gdb "name of compiled file" to debug line by line
@@ -24,24 +27,31 @@ int main(int argc, char **argv){
 
     read_graph_from_file(filename, &N, &row_ptr, &col_idx, &val);
 
-    
+    /* Check if n is bigger than N*/
+    if (n > N) memcpy(&n, &N, sizeof(int));
     
     
     double *scores = malloc(N*sizeof(double));
-    for (int i = 0; i < N ; ++i) {
-        scores[i] = 1./(N);
-        
+   
+    for (size_t i = 0; i < N; i++)
+    {
+       scores[i] = 1./N;
     }
+    
     
 
     PageRank_iterations(N, row_ptr, col_idx, val, d, epsilon, scores);
 
-    
-
     top_n_webpages(N, scores, n);
 
-    free(row_ptr); free(col_idx); free(val); free(scores);
+    free(row_ptr); 
+    free(col_idx); 
+    free(val); 
+    free(scores);
 
-    printf("Hello\n");
+    
     return 0;
 }
+
+
+

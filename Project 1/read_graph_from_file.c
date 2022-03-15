@@ -8,26 +8,21 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     FILE *fp;
     char * line = NULL;
     size_t len = 0;
-    ssize_t read;
+    
     
     fp = fopen(filename, "r");
 
     int edges;
 
-    for (int i = 0; i < 1; ++i)
-        getline(&line, &len, fp); /* Skip the first 2 lines in file */
-
-    
     getline(&line, &len, fp);
+    getline(&line, &len, fp);    
+    
     fscanf(fp, "%*s %*s %d %*s %d", N, &edges );
     printf("%d %d \n", *N, edges);
     getline(&line, &len, fp);
+    getline(&line, &len, fp);
 
    
-    /* Create L(j) arr */
-
-    
-
     int from_arr = 0;
     int to_arr = 0;
 
@@ -41,42 +36,36 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     *row_ptr = malloc(((*N)+1)*sizeof(int));
     (*row_ptr)[0] = 0;
     
-    int i = 0;
-    while ((read = getline(&line, &len, fp)) != -1) {
+    
+
+    for (size_t i= 0; i < edges; i++){
         fscanf(fp, "%d %d", &from_arr, &to_arr);
+
         row_count[to_arr] += 1;
         L_count[from_arr] += 1;
-        printf("From node %d to node %d\n", from_arr, to_arr);
-        i+=1;
+        
     }
+    
 
     for (size_t i = 0; i < *N; i++)
     {
         
         (*row_ptr)[i+1] = (*row_ptr)[i] + row_count[i] ;
-        printf("%d, ", row_count[i]);
+        
         
     }
     printf("\n");
-
-    for (size_t i = 0; i < *N+1; i++)
-    {
-        printf("%d", (*row_ptr)[i]);
-    }
     
-    
-
+    /* Prep file to be read again */
     rewind(fp);
 
-    printf("\n");
-    printf("\n");
-
     
 
     
-    getline(&line, &len, fp); /* Skip the first 2 lines in file */
+
+    /* Skip the first 4 lines in file */
+    getline(&line, &len, fp); 
     getline(&line, &len, fp);
-    
     getline(&line, &len, fp);
     getline(&line, &len, fp);
     
@@ -85,11 +74,9 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     int *count = malloc(*N*sizeof(int));
     *val = malloc(edges*sizeof(double));
     
-
+    /* Insert number in all vectors, avoiding random numbers */
     memset(count, 0, *N*sizeof(int));
-    
     memset(*val, 0, edges*sizeof(double));
-    
     memset(*col_idx, *N, edges*sizeof(int));
     
     from_arr = 0;
@@ -110,26 +97,17 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
                        (*col_idx)[(*row_ptr)[to_arr] + k] = (*col_idx)[(*row_ptr)[to_arr] + k-1];
                        (*val)[(*row_ptr)[to_arr] + k] = (*val)[(*row_ptr)[to_arr] + k-1];
                     }
-
+                /* Assign value to correct place */
                 (*col_idx)[(*row_ptr)[to_arr] + j] = from_arr;
                 (*val)[(*row_ptr)[to_arr] + j] = 1./L_count[from_arr];
                 count[to_arr] += 1;
                 break;
             }
-            
-            
         }
-        
-        
-        
-        
     }
 
     
-    for (size_t i = 0; i < edges; i++)
-    {
-        printf("%d, %f \n", (*col_idx)[i], (*val)[i]);
-    }
+   
     
     free(count); free(L_count); free(row_count); free(line);
 
