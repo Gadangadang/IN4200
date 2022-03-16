@@ -15,6 +15,12 @@ If using an Intel processor, it might not be neccesary to use the -11 after gcc.
 The flag "-fsanitize=address" is a compiler flag that checks for memory leaks and <br>
 buffer overflows, if nothing is wrong, it will not output anything. <br>
 <br>
+When running the code on the stanford web dataset, make sure to use the "web-Stanford_p.txt" <br>
+dataset. The original dataset has the lowest index as 1, made for fortran, but in <br>
+C we need to start at 0, so the script "go.py" creates the "\_p" dataset which has shifted <br>
+both the from and to ids down by 1. By default, the changed dataset "web-Stanford_p.txt" <br>
+will be put in the makefile. <br>
+<br>
 The project contains 4 different c files. 
 * read_graph_from_file.c reads the file you choose in command line, and creates <br>
 a sparse matrix using the CRS standard for the hyperlinks.
