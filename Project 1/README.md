@@ -13,4 +13,14 @@ execute:
 
 If using an Intel processor, it might not be neccesary to use the -11 after gcc. <br> 
 The flag "-fsanitize=address" is a compiler flag that checks for memory leaks and <br>
-buffer overflows, if nothing is wrong, it will not output anything.
+buffer overflows, if nothing is wrong, it will not output anything. <br>
+<br>
+The project contains 4 different c files. 
+* read_graph_from_file.c reads the file you choose in command line, and creates <br>
+a sparse matrix using the CRS standard for the hyperlinks.
+* PageRank_iterations.c will by iteration calculate the score of all the webpages, <br>
+also handling dangling webpages.
+* top_n_webpages.c sorts the scores of the webpages and outputs the top n that you choose.
+* main.c initializes the neccesary pointers, and runs the above mentioned codes.
+
+
