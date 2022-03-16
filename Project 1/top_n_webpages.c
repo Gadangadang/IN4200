@@ -60,7 +60,7 @@ int sort(double *a, int *b, int N){
     int r =N%2 - 1; // Used in the even step.
     int change_even = 0;
     int change_odd = 0;
-    #pragma omp parallel
+    #pragma omp parallel if (N > 1500)
     {
         for (size_t i = 0; i <N; i++) {
             #pragma omp for reduction(+:change_odd)
