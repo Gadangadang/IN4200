@@ -12,20 +12,19 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
     memset(dong_index, 0, nr_dong * sizeof(int));
     int count = 0;
 
-    #pragma omp parallel for
+    #pragma omp parallel for if (N > 1500)
     for (size_t i = 0; i < edges; i++)
     {
         non_zero_columns[col_idx[i]] = 1;
     }
 
-    #pragma omp parallel for reduction(- \
-                                   : nr_dong)
+    #pragma omp parallel for reduction(-: nr_dong)if (N > 1500)
     for (size_t i = 0; i < N; i++)
     {
         nr_dong -= non_zero_columns[i];
     }
 
-    #pragma omp parallel
+    #pragma omp parallel if (N > 1500)
     {
     #pragma omp for
         for (size_t i = 0; i < N; i++)
@@ -67,7 +66,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
     size_t i, j; 
     
 
-    #pragma omp parallel 
+    #pragma omp parallel if (N > 1500)
     {
         while (max_err > epsilon){
 
@@ -116,7 +115,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
     }
     memcpy(scores, x_k_1, N * sizeof(double));
     printf("Last iteration: %d, Max error: %f, epsilon: %f\n", k, max_err, epsilon);
-    printf("\n");
+    
 
     
     
