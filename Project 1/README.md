@@ -24,7 +24,7 @@ also handling dangling webpages.
 * main.c initializes the neccesary pointers, and runs the above mentioned codes.
 <br>
 <br>
-Below are the output of the top 10 webpages, using a damping of 0.85 and a error threshold of 1e-6:
+Below are the output of the top 10 webpages, using a damping of 0.85 and a error threshold of 1e-6: <br>
 <br>
 NR of dangling webpages: 172 <br>
 
