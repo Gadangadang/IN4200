@@ -25,7 +25,7 @@ also handling dangling webpages.
 <br>
 <br>
 Below are the output of the top 10 webpages, using a damping of 0.85 and a error threshold of 1e-6:
-
+<br>
 NR of dangling webpages: 172 <br>
 
 Last iteration: 41, Max error: 0.000001, epsilon: 0.000001 <br>
