@@ -49,7 +49,7 @@ int main(int argc, char **argv){
 
     clock_t end1 = clock();
     double time_spent1 = (double)(end1 - begin1) / CLOCKS_PER_SEC;
-    printf("Time total is %E min\n", time_spent1/60);
+    printf("Time total is %E s\n", time_spent1);
 
     free(row_ptr); 
     free(col_idx); 

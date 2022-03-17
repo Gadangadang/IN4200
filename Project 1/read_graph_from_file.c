@@ -87,23 +87,28 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     for (size_t i = 0; i < edges; i++)
      {
         fscanf(fp, "%d %d", &from_arr, &to_arr);
+
+        
+        (*col_idx)[(*row_ptr)[to_arr] + count[to_arr]] = from_arr;
+        (*val)[(*row_ptr)[to_arr] + count[to_arr]] = 1. / L_count[from_arr];
+        count[to_arr] += 1;
         
         
-        for (size_t j = 0; j < (*row_ptr)[to_arr+1] - (*row_ptr)[to_arr]; j++){
-            if (from_arr < (*col_idx)[(*row_ptr)[to_arr] + j]){
-                /* Move number to the right*/
-                for (size_t k = count[to_arr]; k > j; k--)
-                    { 
-                       (*col_idx)[(*row_ptr)[to_arr] + k] = (*col_idx)[(*row_ptr)[to_arr] + k-1];
-                       (*val)[(*row_ptr)[to_arr] + k] = (*val)[(*row_ptr)[to_arr] + k-1];
-                    }
-                /* Assign value to correct place */
-                (*col_idx)[(*row_ptr)[to_arr] + j] = from_arr;
-                (*val)[(*row_ptr)[to_arr] + j] = 1./L_count[from_arr];
-                count[to_arr] += 1;
-                break;
-            }
-        }
+        //for (size_t j = 0; j < (*row_ptr)[to_arr+1] - (*row_ptr)[to_arr]; j++){
+        //    if (from_arr < (*col_idx)[(*row_ptr)[to_arr] + j]){
+        //        /* Move number to the right*/
+        //        for (size_t k = count[to_arr]; k > j; k--)
+        //            { 
+        //               (*col_idx)[(*row_ptr)[to_arr] + k] = (*col_idx)[(*row_ptr)[to_arr] + k-1];
+        //               (*val)[(*row_ptr)[to_arr] + k] = (*val)[(*row_ptr)[to_arr] + k-1];
+        //            }
+        //        /* Assign value to correct place */
+        //        (*col_idx)[(*row_ptr)[to_arr] + j] = from_arr;
+        //        (*val)[(*row_ptr)[to_arr] + j] = 1./L_count[from_arr];
+        //        count[to_arr] += 1;
+        //        break;
+        //    }
+        //}
     }
 
     
