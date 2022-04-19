@@ -19,7 +19,7 @@ simple-jpeg:
 
 
 run:
-	./serial_main.x 0.2 100 "mona_lisa_noisy.jpeg" "mona_lisa_denoised.jpeg"
+	./serial_main.x 0.2 100 "mona_lisa_noisy.jpg" "mona_lisa_denoised.jpg"
 
 obj-clean:
 	$(RM) *.o
