@@ -3,7 +3,7 @@ CFLAGS = -O2
 LDFLAGS = -L../simple-jpeg/ -lsimplejpeg
 
 PROJ = serial_main
-OBJS = serial_main.o ../utilities/functions.o ../utilities/functions_serial.o
+OBJS = serial_main.o ../utilities/functions.o 
 
 
 all: simple-jpeg $(PROJ) $(OBJS) obj-clean run
