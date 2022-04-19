@@ -1,4 +1,4 @@
-CC = mpicc #gcc
+CC = gcc
 CFLAGS = -O2
 LDFLAGS = -L../simple-jpeg/ -lsimplejpeg
 
@@ -19,7 +19,7 @@ simple-jpeg:
 
 
 run:
-	mpirun -np 4 ./serial_main.x
+	./serial_main.x 0.2 100 "mona_lisa_noisy.jpeg" "mona_lisa_denoised.jpeg"
 
 obj-clean:
 	$(RM) *.o

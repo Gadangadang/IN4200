@@ -19,7 +19,7 @@ simple-jpeg:
 
 
 run:
-	mpirun -np 4 ./parallel_main.x
+	mpirun -n 4 ./parallel_main.x 
 
 obj-clean:
 	$(RM) *.o
