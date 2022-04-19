@@ -20,7 +20,12 @@
     double tmp[N];
     int tmp2[N];
     //sort(scores, score_web_page_num, N);
+
+    
+    
     superfastsort(scores, N, tmp, score_web_page_num, tmp2);
+    
+    
 
     /* Print top n webpages */
 
@@ -139,6 +144,7 @@ void superfastsort(double *X, int n, double *tmp, int *Y, int *tmp2)
 {
     if (n < 2)
         return;
+
 
 #pragma omp task firstprivate(X, n, tmp, Y, tmp2)
     superfastsort(X, n / 2, tmp, Y, tmp2);
