@@ -288,6 +288,7 @@ void import_JPEG_file (const char* filename,
     fprintf(stderr, "can't open %s\n", filename);
     return;
   }
+  
 
   /* Step 1: allocate and initialize JPEG decompression object */
 
@@ -303,6 +304,7 @@ void import_JPEG_file (const char* filename,
     fclose(infile);
     return;
   }
+  
   /* Now we can initialize the JPEG decompression object. */
   jpeg_create_decompress(&cinfo);
 
@@ -311,7 +313,7 @@ void import_JPEG_file (const char* filename,
   jpeg_stdio_src(&cinfo, infile);
 
   /* Step 3: read file parameters with jpeg_read_header() */
-
+  
   (void) jpeg_read_header(&cinfo, TRUE);
   /* We can ignore the return value from jpeg_read_header since
    *   (a) suspension is not possible with the stdio data source, and
@@ -349,7 +351,7 @@ void import_JPEG_file (const char* filename,
   *num_components = cinfo.output_components;
   *image_chars = (unsigned char*)malloc(cinfo.output_height*row_stride);
   k = 0;
-
+  
   /* Step 6: while (scan lines remain to be read) */
   /*           jpeg_read_scanlines(...); */
 
@@ -366,6 +368,7 @@ void import_JPEG_file (const char* filename,
     for (j=0; j<row_stride; j++)
       (*image_chars)[k++] = (unsigned char) buffer[0][j];  /* copy over */
   }
+  
 
   /* Step 7: Finish decompression */
 
@@ -385,6 +388,8 @@ void import_JPEG_file (const char* filename,
    * think that jpeg_destroy can do an error exit, but why assume anything...)
    */
   fclose(infile);
+
+  
 
   /* At this point you may want to check to see whether any corrupt-data
    * warnings occurred (test whether jerr.pub.num_warnings is nonzero).
