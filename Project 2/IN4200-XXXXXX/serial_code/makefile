@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O2
+CFLAGS = -O2 -Wall -g -fsanitize=undefined -fsanitize=address
 LDFLAGS = -L../simple-jpeg/ -lsimplejpeg
 
 PROJ = serial_main
