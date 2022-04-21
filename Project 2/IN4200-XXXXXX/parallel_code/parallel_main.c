@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
         import_JPEG_file(input_jpeg_filename, &image_chars, &m, &n, &c);
         //import_JPEG_file(input_jpeg_filename, &image_chars1, &m, &n, &c);
         //allocate_image (&whole_image, m, n);
+        printf("Image allocated, pixel dimension: [%d, %d]\n", m, n);
 
         
     }
@@ -45,14 +46,7 @@ int main(int argc, char** argv) {
 
     MPI_Bcast (&m, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast (&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    //MPI_Bcast (&kappa, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
-    //MPI_Bcast (&iters, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-
-    //int rest = m%num_procs;
-    //int count = m / num_procs;
-    //int start, stop;
-
+    
     
 
     my_n = n;
@@ -61,8 +55,6 @@ int main(int argc, char** argv) {
 
     
 
-    printf("%d\n", my_m);
-    MPI_Barrier(MPI_COMM_WORLD);
 
     total = my_n*my_m;
 
@@ -80,46 +72,27 @@ int main(int argc, char** argv) {
 
     int *displs = malloc(num_procs*sizeof *displs+1);
 
-    MPI_Barrier(MPI_COMM_WORLD);
-    printf("h1\n");
-    MPI_Barrier(MPI_COMM_WORLD);
+  
     
     displs[0] = 0;
     for (int rank = 0; rank < num_procs-1; rank++) {
-        //n_rows[rank] = total;
-    
         displs[rank+1] = displs[rank] + n_rows[rank];
     
     }
-
-    MPI_Barrier(MPI_COMM_WORLD);
-    printf("h2\n");
-    MPI_Barrier(MPI_COMM_WORLD);
-
-    // Last remainder processes gets an extra row.
     
-    //n_rows[num_procs-1] = total;
-    MPI_Barrier(MPI_COMM_WORLD);
 
     if (my_rank==0){
         for (int i= 0; i< num_procs; i++) printf("col with rank %d is %d\n", i, n_rows[i]);
     }
-    
-    
-    MPI_Barrier(MPI_COMM_WORLD);
-    
+
     
     my_image_chars = malloc(total*sizeof(*my_image_chars)+1);
 
-    
-    
     allocate_image (&u, my_m, my_n);
+    printf("Rank %d: Image allocated, pixel dimension: [%d, %d]\n", my_rank, my_m, my_n);
     allocate_image (&u_bar, my_m, my_n);
     /* each process asks process 0 for a partitioned region */
     /* of image_chars and copy the values into u */
-    /* ... */
-
-    
 
     MPI_Scatterv(image_chars, 
                 n_rows, 
@@ -131,9 +104,7 @@ int main(int argc, char** argv) {
                 0, 
                 MPI_COMM_WORLD);
         
-    MPI_Barrier(MPI_COMM_WORLD);
-    printf("h3\n");
-    MPI_Barrier(MPI_COMM_WORLD);
+    
 
     convert_jpeg_to_image (my_image_chars, &u);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -146,14 +117,11 @@ int main(int argc, char** argv) {
     /* process 0 receives from each process incoming values and */
     /* copy them into the designated region of struct whole_image */
     convert_image_to_jpeg(&u_bar, my_image_chars);
-    if (my_image_chars){
-        printf("Rank %d is Null\n", my_rank);
-    } else{
-        printf("Rank %d not Null\n", my_rank);
-    }
+    
     
 
     MPI_Barrier(MPI_COMM_WORLD);
+    if (my_rank == 0) printf("Image denoising done\n");
     
     MPI_Gatherv(my_image_chars, 
                 total, 
