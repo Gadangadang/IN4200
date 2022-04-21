@@ -8,7 +8,7 @@
 void deallocate_image(image *u){
     int m = u->m;
 
-    for (int i = 0; i < m+1; i++){
+    for (int i = 0; i < m; i++){
         free(u->image_data[i]);
     }
     free(u->image_data);

@@ -7,8 +7,8 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int 
     int m = u->m;
     int n = u->n;
     image *tmp;
-    float *upper_buff = malloc(m*sizeof(*upper_buff)); 
-    float *lowerbuff = malloc(m*sizeof(*lowerbuff));
+    float *upper_buff = malloc(n*sizeof(*upper_buff)+1); 
+    float *lowerbuff = malloc(n*sizeof(*lowerbuff)+1);
 
     /* Corners not changing so just copy from beginning */
 
@@ -23,27 +23,27 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int 
         /* Each part needs to send its border to the neighboring partner */
 
         if (rank == 0){
-            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
-            MPI_Recv(&upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
+            MPI_Send(u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
+            MPI_Recv(upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
 
         } else if (rank %2 != 0 & rank != num_procs-1){
-            MPI_Recv(&lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
-            MPI_Recv(&upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
-            MPI_Send(&u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
-            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
+            MPI_Recv(lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
+            MPI_Send(u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
+            MPI_Send(u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
 
         } else if (rank % 2 == 0 & rank != 0 & rank != num_procs-1) {
             
-            MPI_Send(&u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
-            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
-            MPI_Recv(&upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
-            MPI_Recv(&lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
+            MPI_Send(u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
+            MPI_Send(u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
+            MPI_Recv(upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
             
 
         } else if (rank == num_procs-1) {
             
-            MPI_Recv(&lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
-            MPI_Send(&u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
+            MPI_Recv(lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
+            MPI_Send(u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
            
         }
         

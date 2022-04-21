@@ -151,9 +151,8 @@ int main(int argc, char** argv) {
     } else{
         printf("Rank %d not Null\n", my_rank);
     }
-    if (my_rank == 0){
+    
 
-    }
     MPI_Barrier(MPI_COMM_WORLD);
     
     MPI_Gatherv(my_image_chars, 
