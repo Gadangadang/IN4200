@@ -5,7 +5,7 @@
 #include <mpi.h>
 
 
-void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int iters);
+void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int iters, int rank, int num_procs);
 
 
 #endif // FUNCTIONS_PARALLEL
