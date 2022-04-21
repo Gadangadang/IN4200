@@ -1,5 +1,5 @@
 CC = mpicc #gcc
-CFLAGS = -O2 -Wall -g -fsanitize=undefined -fsanitize=address
+CFLAGS = -O2 -Wall -g -fsanitize=undefined -fsanitize=address -lm -Wextra -Wfloat-equal -Wconversion
 LDFLAGS = -L../simple-jpeg/ -lsimplejpeg
 
 PROJ = parallel_main
