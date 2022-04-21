@@ -41,20 +41,22 @@ int main(int argc, char** argv) {
 
         
     }
-    image_chars1 = malloc(m*n*sizeof(*image_chars1)+1);
     
 
     MPI_Bcast (&m, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast (&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
     
-    
+
+    image_chars1 = malloc(m * n * sizeof(*image_chars1) + 1);
+
+   
 
     my_n = n;
     
     my_m = m/num_procs + (my_rank <= m%num_procs-1);
 
-    
-
+   
 
     total = my_n*my_m;
 
@@ -62,13 +64,16 @@ int main(int argc, char** argv) {
     int *n_rows = malloc(num_procs*sizeof(*n_rows)+1);
     
     for (int i = 0; i < num_procs; i++) n_rows[i] = 0;
+
     
-    
+
     MPI_Gather(&total, 1, MPI_INT, &n_rows[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
+
     
+
     /* 2D decomposition of the m x n pixels evenly among the MPI processes */
-    MPI_Bcast(&n_rows, num_procs, MPI_INT, 0, MPI_COMM_WORLD);
-    
+    //MPI_Bcast(&n_rows, num_procs, MPI_INT, 0, MPI_COMM_WORLD);
+
 
     int *displs = malloc(num_procs*sizeof *displs+1);
 
