@@ -3,6 +3,8 @@
 #include "image.h"
 #include <string.h>
 #include <mpi.h>
+#include <stdlib.h>
+
 
 
 void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int iters, int rank, int num_procs);

@@ -8,7 +8,7 @@
 void deallocate_image(image *u){
     int m = u->m;
 
-    for (int i = 0; i < m; i++){
+    for (int i = 0; i < m+1; i++){
         free(u->image_data[i]);
     }
     free(u->image_data);
@@ -17,10 +17,10 @@ void deallocate_image(image *u){
 void allocate_image(image *u, int m, int n){
     u->n = n;
     u->m = m;
-    u->image_data = malloc(m*sizeof(float*));
+    u->image_data = malloc(m*sizeof(float*)+1);
     for (int i= 0; i < m; i++){
         
-        u->image_data[i] = malloc(n*sizeof(float)) ;
+        u->image_data[i] = malloc(n*sizeof(float)+1) ;
         
     }    
 }
@@ -62,7 +62,11 @@ void iso_diffusion_denoising(image *u, image *u_bar, float kappa, int iters){
         
         for (int i = 1; i < m-1; i++){
             for (int j = 1; j < n-1; j++){
-                u_bar->image_data[i][j] = u->image_data[i][j] + kappa*( u->image_data[i-1][j] + u->image_data[i][j-1] - 4*u->image_data[i][j] +u->image_data[i][j+1] +u->image_data[i+1][j] );
+                u_bar->image_data[i][j] = u->image_data[i][j] + kappa*( u->image_data[i-1][j] 
+                                                                      + u->image_data[i][j-1] 
+                                                                      - 4*u->image_data[i][j] 
+                                                                      + u->image_data[i][j+1] 
+                                                                      + u->image_data[i+1][j] );
 
             }
         }
@@ -74,7 +78,11 @@ void iso_diffusion_denoising(image *u, image *u_bar, float kappa, int iters){
     }
     for (int i = 1; i < m-1; i++){
             for (int j = 1; j < n-1; j++){
-                u_bar->image_data[i][j] = u->image_data[i][j] + kappa*( u->image_data[i-1][j] + u->image_data[i][j-1] - 4*u->image_data[i][j] +u->image_data[i][j+1] +u->image_data[i+1][j] );
+                u_bar->image_data[i][j] = u->image_data[i][j] + kappa*( u->image_data[i-1][j] 
+                                                                      + u->image_data[i][j-1] 
+                                                                      - 4*u->image_data[i][j] 
+                                                                      + u->image_data[i][j+1] 
+                                                                      + u->image_data[i+1][j] );
 
             }
         }

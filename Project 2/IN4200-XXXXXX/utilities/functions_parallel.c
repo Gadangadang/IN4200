@@ -22,28 +22,28 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int 
 
         /* Each part needs to send its border to the neighboring partner */
 
-        if (my_rank == 0){
-            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, &lowerbuff, 0, MPI_COMM_WORLD);
-            MPI_Recv(&upper_buff, n, MPI_FLOAT, my_rank+1, 0, MPI_COMM_WORLD, status);
+        if (rank == 0){
+            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
+            MPI_Recv(&upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
 
-        } else if (my_rank %2 != 0 & my_rank != num_procs-1){
-            MPI_Recv(&lowerbuff, n, MPI_FLOAT, my_rank-1, 0, MPI_COMM_WORLD, status);
-            MPI_Recv(&upper_buff, n, MPI_FLOAT, my_rank+1, 0, MPI_COMM_WORLD, status);
-            MPI_Send(&u->image_data[0], n, MPI_FLOAT, &upper_buff, 0, MPI_COMM_WORLD);
-            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, &lowerbuff, 0, MPI_COMM_WORLD);
+        } else if (rank %2 != 0 & rank != num_procs-1){
+            MPI_Recv(&lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(&upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
+            MPI_Send(&u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
+            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
 
-        } else if (my_rank % 2 == 0 & my_rank != 0 & my_rank != num_procs-1) {
+        } else if (rank % 2 == 0 & rank != 0 & rank != num_procs-1) {
             
-            MPI_Send(&u->image_data[0], n, MPI_FLOAT, &upper_buff, 0, MPI_COMM_WORLD);
-            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, &lowerbuff, 0, MPI_COMM_WORLD);
-            MPI_Recv(&upper_buff, n, MPI_FLOAT, my_rank+1, 0, MPI_COMM_WORLD, status);
-            MPI_Recv(&lowerbuff, n, MPI_FLOAT, my_rank-1, 0, MPI_COMM_WORLD, status);
+            MPI_Send(&u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
+            MPI_Send(&u->image_data[m-1], n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
+            MPI_Recv(&upper_buff, n, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(&lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
             
 
-        } else if (my_rank == num_procs-1) {
+        } else if (rank == num_procs-1) {
             
-            MPI_Recv(&lowerbuff, n, MPI:FLOAT, my_rank-1, 0, MPI_COMM_WORLD, status);
-            MPI_Send(&u->image_data[0], n, MPI_FLOAT, &upper_buff, 0, MPI_COMM_WORLD);
+            MPI_Recv(&lowerbuff, n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD, &status);
+            MPI_Send(&u->image_data[0], n, MPI_FLOAT, rank-1, 0, MPI_COMM_WORLD);
            
         }
         
@@ -59,13 +59,48 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int 
             }
         }
 
-        /*  */
+        /* Make sure the border points for the given chunks are calculated too */
 
+        if (rank == 0){ // Only bottom part taken to account
+            for (int j = 1; j < n-1; j++){
+                u_bar->image_data[m-1][j] = u->image_data[m-1][j] + kappa*( u->image_data[m-2][j] 
+                                                                          + u->image_data[m-1][j-1] 
+                                                                          - 4*u->image_data[m-1][j] 
+                                                                          + u->image_data[m-1][j+1] 
+                                                                          + upper_buff[j] );
+        }
 
+        } else if (rank == num_procs-1) { // Only top part taken to account
+            for (int j = 1; j < n-1; j++){
+                u_bar->image_data[0][j] = u->image_data[0][j] + kappa*( lowerbuff[j] 
+                                                                      + u->image_data[0][j-1] 
+                                                                      - 4*u->image_data[0][j] 
+                                                                      + u->image_data[0][j+1] 
+                                                                      + u->image_data[1][j] );
+        }
 
+        } else { // Both top and bottom part taken to account
+            for (int j = 1; j < n-1; j++){
+                u_bar->image_data[0][j] = u->image_data[0][j] + kappa*( lowerbuff[j] 
+                                                                      + u->image_data[0][j-1] 
+                                                                      - 4*u->image_data[0][j] 
+                                                                      + u->image_data[0][j+1] 
+                                                                      + u->image_data[1][j] );
+
+                u_bar->image_data[m-1][j] = u->image_data[m-1][j] + kappa*( u->image_data[m-2][j] 
+                                                                          + u->image_data[m-1][j-1] 
+                                                                          - 4*u->image_data[m-1][j] 
+                                                                          + u->image_data[m-1][j+1] 
+                                                                          + upper_buff[j] );
+        }
+
+        }
+        
         MPI_Barrier(MPI_COMM_WORLD);
         tmp = u;
         u = u_bar;
         u_bar = tmp;
     }
+    free(upper_buff);
+    free(lowerbuff);
 }
