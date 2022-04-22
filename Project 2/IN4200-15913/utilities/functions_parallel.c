@@ -14,7 +14,7 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int 
 
     for (int i =0; i < m; i++) memcpy(u_bar->image_data[i], u->image_data[i], n*sizeof(float) );
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    //MPI_Barrier(MPI_COMM_WORLD);
 
 
     for (int iter = 0; iter < iters; iter ++){
@@ -96,7 +96,7 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, double kappa, int 
 
         }
         
-        MPI_Barrier(MPI_COMM_WORLD);
+        //MPI_Barrier(MPI_COMM_WORLD);
         tmp = u;
         u = u_bar;
         u_bar = tmp;
