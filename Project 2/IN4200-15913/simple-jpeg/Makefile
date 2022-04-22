@@ -1,4 +1,4 @@
-CC = gcc-11
+CC = gcc
 CFLAGS = -O2
 
 PROJ = libsimplejpeg.a
