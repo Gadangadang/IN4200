@@ -19,7 +19,7 @@ simple-jpeg:
 
 
 run:
-	mpirun -n 4 ./parallel_main.x 0.2 100 "mona_lisa_noisy.jpg" "mona_lisa_denoised.jpg"
+	mpirun -n 4 ./parallel_main.x 0.2 1000 "mona_lisa_noisy.jpg" "mona_lisa_denoised_1000.jpg"
 
 obj-clean:
 	$(RM) *.o
