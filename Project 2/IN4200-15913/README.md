@@ -12,6 +12,6 @@ and then denoising with iterations equal to 10, 100 and 1000.
 
 | Noisy and 100 iterations            |  10 and 1000 iterations |
 :-------------------------:|:-------------------------:
-<img src="./parallel_code/mona_lisa_noisy.jpg" width="200">  | <img src="./parallel_code/mona_lisa_denoised_10.jpg" width="200">
- <img src="./parallel_code/mona_lisa_denoised_100.jpg" width="200"> |   <img src="./parallel_code/mona_lisa_denoised_1000.jpg" width="200"> 
+<img src="./parallel_code/mona_lisa_noisy.jpg" width="250">  | <img src="./parallel_code/mona_lisa_denoised_10.jpg" width="250">
+ <img src="./parallel_code/mona_lisa_denoised_100.jpg" width="250"> |   <img src="./parallel_code/mona_lisa_denoised_1000.jpg" width="250"> 
 
