@@ -1,5 +1,5 @@
 CC = mpicc #gcc
-CFLAGS = -O2 -Wall -g -fsanitize=undefined -fsanitize=address
+CFLAGS = -O2 -Wall -g -fsanitize=undefined -fsanitize=address -lm -Wextra -Wfloat-equal -Wconversion
 LDFLAGS = -L../simple-jpeg/ -lsimplejpeg
 
 PROJ = parallel_main
@@ -19,7 +19,7 @@ simple-jpeg:
 
 
 run:
-	mpirun -n 4 ./parallel_main.x 0.2 100 "mona_lisa_noisy.jpg" "mona_lisa_denoised.jpg"
+	mpirun -n 4 ./parallel_main.x 0.2 1000 "mona_lisa_noisy.jpg" "mona_lisa_denoised_1000.jpg"
 
 obj-clean:
 	$(RM) *.o
