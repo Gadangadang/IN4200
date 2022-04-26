@@ -1,4 +1,5 @@
 #include <math.h>
+#include "PageRank_iterations.h"
 
 void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
     printf("\n");
@@ -13,13 +14,13 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
     int count = 0;
 
     #pragma omp parallel for if (N > 1500)
-    for (size_t i = 0; i < edges; i++)
+    for (int i = 0; i < edges; i++)
     {
         non_zero_columns[col_idx[i]] = 1;
     }
 
     #pragma omp parallel for reduction(-: nr_dong)if (N > 1500)
-    for (size_t i = 0; i < N; i++)
+    for (int i = 0; i < N; i++)
     {
         nr_dong -= non_zero_columns[i];
     }
@@ -27,7 +28,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
     #pragma omp parallel if (N > 1500)
     {
     #pragma omp for
-        for (size_t i = 0; i < N; i++)
+        for (int i = 0; i < N; i++)
         {
             if (non_zero_columns[i] == 0)
             {
@@ -63,7 +64,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double 
 
     
 
-    size_t i, j; 
+    int i, j; 
     
 
     #pragma omp parallel if (N > 1500)

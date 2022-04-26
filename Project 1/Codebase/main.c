@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <omp.h>
 #include <string.h>
-#include "read_graph_from_file.h"
-#include "PageRank_iterations.h"
-#include "top_n_webpages.h"
 #include <time.h>
+#include "../functions/top_n_webpages.h"
+#include "../functions/read_graph_from_file.h"
+#include "../functions/PageRank_iterations.h"
 
 int main(int argc, char **argv){
     /*
